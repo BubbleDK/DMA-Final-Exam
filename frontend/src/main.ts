@@ -1,24 +1,32 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+import axios from 'axios';
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+// Function to set a cookie
+async function setCookie(url: string): Promise<void> {
+    try {
+        await axios.get(url);
+        console.log('Cookie set successfully');
+    } catch (error) {
+        console.error('Error setting cookie:', error);
+    }
+}
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+// Function to get cookies
+async function getCookies(url: string): Promise<string[]> {
+    try {
+        const response = await axios.get(url);
+        return response.headers['set-cookie'] || [];
+    } catch (error) {
+        console.error('Error fetching cookies:', error);
+        return [];
+    }
+}
+
+// Set a cookie and then get it
+const setCookieUrl = 'https://httpbin.org/cookies/set?name=value';
+const getCookiesUrl = 'https://httpbin.org/cookies';
+
+setCookie(setCookieUrl).then(() => {
+    getCookies(getCookiesUrl).then(cookies => {
+        console.log('Cookies:', cookies);
+    });
+});
