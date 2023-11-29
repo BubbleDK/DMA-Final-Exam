@@ -4,12 +4,6 @@ import yargs from 'yargs';
 import * as process from 'process';
 
 const args = yargs(process.argv.slice(2))
-    .option('chrome', {
-        alias: 'c',
-        description: 'Path to chrome executable',
-        type: 'string',
-        default: '/usr/bin/google-chrome'
-    })
     .option('output', {
         alias: 'o',
         description: 'Path to output file',
@@ -74,7 +68,6 @@ const inject = () => {
 
 (async (args) => {
     const browser = await puppeteer.launch({
-        args: [],
         headless: false,
         defaultViewport: null
     });
