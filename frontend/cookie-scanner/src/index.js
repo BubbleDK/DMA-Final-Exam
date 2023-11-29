@@ -75,7 +75,6 @@ const inject = () => {
 (async (args) => {
     const browser = await puppeteer.launch({
         args: [],
-        executablePath: args.chrome,
         headless: false,
         defaultViewport: null
     });
