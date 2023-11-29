@@ -1,6 +1,6 @@
 USE [DMA-CSD-S212_10407505];
 
-DROP TABLE fp_Employee, fp_company;
+DROP TABLE fp_Company, fp_Employee, fp_Domain, fp_Cookie, fp_UserConsent, fp_User;
 go
 
 CREATE TABLE fp_Company(
@@ -15,7 +15,7 @@ CREATE TABLE fp_Employee(
   name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   phone VARCHAR(50) NOT NULL,
-  passwordHash nCHAR(60 ),
+  passwordHash nCHAR(60),
   companyID INT NOT NULL,
 
   CONSTRAINT FK_Employee_Company FOREIGN KEY (companyID) REFERENCES fp_Company(id) ON DELETE CASCADE,
