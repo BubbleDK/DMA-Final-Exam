@@ -7,9 +7,7 @@ import { MantineProvider } from '@mantine/core';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <MantineProvider defaultColorScheme="dark" theme={{
-      fontFamily: 'Nunito, sans-serif',
-    }}>
+    <MantineProvider defaultColorScheme="dark" theme={{fontFamily: 'Nunito, sans-serif'}}>
       <App />
     </MantineProvider>
   </React.StrictMode>,
