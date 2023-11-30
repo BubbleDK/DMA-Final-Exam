@@ -1,5 +1,6 @@
 ﻿//using DataAccessLayer.Exceptions;
 using DMA_FinalProject.DAL.Model;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace DMA_FinalProject.DAL.DAO
@@ -56,7 +57,7 @@ namespace DMA_FinalProject.DAL.DAO
                                 Name = (string?)reader["name"],
                                 Email = (string?)reader["email"],
                                 Phone = (string?)reader["phone"],
-                                CompanyId = (int?)reader["companyID"]
+                                CompanyId = (int)reader["companyID"]
                             };
                             return employee;
                         }
@@ -73,12 +74,62 @@ namespace DMA_FinalProject.DAL.DAO
 
         public IEnumerable<Employee> GetAll()
         {
-            throw new NotImplementedException();
+            string sqlStatement = "SELECT * FROM fp_Employee;";
+            List<Employee> employees = new();
+
+            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                SqlCommand cmd = new SqlCommand(sqlStatement, conn);
+
+                try
+                {
+                    conn.Open();
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Employee employee = new Employee()
+                        {
+                            Name = (string?)reader["name"],
+                            Email = (string?)reader["email"],
+                            Phone = (string?)reader["phone"],
+                            CompanyId = (int)reader["companyID"]
+                        };
+                        employees.Add(employee);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return employees;
         }
 
         public bool Remove(dynamic key)
         {
-            throw new NotImplementedException();
+            SqlTransaction trans;
+            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open();
+                using (trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand deleteCommand = new SqlCommand("DELETE fp_Employee WHERE email = @email", conn, trans))
+                        {
+                            deleteCommand.Parameters.AddWithValue("@email", key);
+                            deleteCommand.ExecuteNonQuery();
+                            trans.Commit();
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
         public bool Update(Employee o)

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DMA_FinalProject.DAL.Model
+﻿namespace DMA_FinalProject.API.DTO
 {
-    public class Employee
+    public class EmployeeDTO
     {
         public string Name { get; set; }
         public string Phone { get; set; }
