@@ -35,7 +35,7 @@ namespace DMA_FinalProject.DAL.DAO
                     }
                 }
             }
-                throw new NotImplementedException();
+            return true;
         }
 
         public Employee? Get(dynamic key)
@@ -115,7 +115,7 @@ namespace DMA_FinalProject.DAL.DAO
                 {
                     try
                     {
-                        using (SqlCommand deleteCommand = new SqlCommand("DELETE fp_Employee WHERE email = @email", conn, trans))
+                        using (SqlCommand deleteCommand = new SqlCommand("DELETE FROM fp_Employee WHERE email = @email", conn, trans))
                         {
                             deleteCommand.Parameters.AddWithValue("@email", key);
                             deleteCommand.ExecuteNonQuery();
