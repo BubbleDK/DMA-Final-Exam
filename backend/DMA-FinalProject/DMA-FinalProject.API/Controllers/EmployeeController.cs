@@ -40,6 +40,12 @@ namespace DMA_FinalProject.API.Controllers
             return Ok(dataAccess.Add(p.EmployeeFromDto()));
         }
 
+        [HttpPut]
+        public ActionResult<bool> Update(EmployeeDTO p)
+        {
+            return Ok(dataAccess.Update(p.EmployeeFromDto()));
+        }
+
         [HttpDelete("{email}")]
         public ActionResult<bool> Delete(string email)
         {
