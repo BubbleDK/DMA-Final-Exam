@@ -17,15 +17,39 @@ namespace DMA_FinalProject.DAL.DAO
                 {
                     try
                     {
-                        using (SqlCommand insertCommand = new SqlCommand(
-                        "INSERT INTO fp_employee VALUES (@name, @phone, @email, @companyID);", conn))
+                        // Check if there's already an existing user with the email
+                        bool userExistsAlready = false;
+                        using (SqlCommand readCommand = new SqlCommand(
+                            "SELECT * FROM fp_Employee WHERE email = @email", conn, trans))
                         {
-                            insertCommand.Parameters.AddWithValue("@name", e.Name);
-                            insertCommand.Parameters.AddWithValue("@phone", e.Phone);
-                            insertCommand.Parameters.AddWithValue("@email", e.Email);
-                            insertCommand.Parameters.AddWithValue("@companyID", e.CompanyId);
-                            insertCommand.ExecuteNonQuery();
+                            readCommand.Parameters.AddWithValue("@email", e.Email);
+                            using (SqlDataReader reader = readCommand.ExecuteReader())
+                            {
+                                if (reader.Read())
+                                {
+                                    userExistsAlready = true;
+                                }
+                            }
+                        }
+
+                        if (!userExistsAlready)
+                        {
+                            using (SqlCommand insertCommand = new SqlCommand(
+                                "INSERT INTO fp_Employee VALUES (@name, @email, @phone, @passwordHash, @companyID);", conn, trans))
+                            {
+                                insertCommand.Parameters.AddWithValue("@name", e.Name);
+                                insertCommand.Parameters.AddWithValue("@email", e.Email);
+                                insertCommand.Parameters.AddWithValue("@phone", e.Phone);
+                                insertCommand.Parameters.AddWithValue("@passwordHash", e.PasswordHash);
+                                insertCommand.Parameters.AddWithValue("@companyID", e.CompanyId);
+                                insertCommand.ExecuteNonQuery();
+                            }
                             trans.Commit();
+                        }
+                        else
+                        {
+                            conn.Close();
+                            return false;
                         }
                     }
                     catch (Exception)
@@ -37,6 +61,8 @@ namespace DMA_FinalProject.DAL.DAO
             }
             return true;
         }
+
+
 
         public Employee? Get(dynamic key)
         {
@@ -79,12 +105,11 @@ namespace DMA_FinalProject.DAL.DAO
 
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
-                SqlCommand cmd = new SqlCommand(sqlStatement, conn);
-
+                SqlCommand getAllCommand = new SqlCommand(sqlStatement, conn);
                 try
                 {
                     conn.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
+                    SqlDataReader reader = getAllCommand.ExecuteReader();
                     while (reader.Read())
                     {
                         Employee employee = new Employee()
@@ -134,7 +159,34 @@ namespace DMA_FinalProject.DAL.DAO
 
         public bool Update(Employee o)
         {
-            throw new NotImplementedException();
+            //int rows = -1;
+            SqlTransaction trans;
+            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open ();
+                using (trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand updateCommand = new SqlCommand(
+                            "UPDATE fp_Employee SET name = @name, phone = @phone, email = @email, companyID = @companyID WHERE email = @email", conn, trans))
+                        {
+                            updateCommand.Parameters.AddWithValue("@name", o.Name);
+                            updateCommand.Parameters.AddWithValue("@phone", o.Phone);
+                            updateCommand.Parameters.AddWithValue("@email", o.Email);
+                            updateCommand.Parameters.AddWithValue("@companyID", o.CompanyId);
+                            updateCommand.ExecuteNonQuery();
+                        }
+                        trans.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw new Exception("Update exception");
+                    }
+                }
+            }
+            return true;
         }
     }
 }
