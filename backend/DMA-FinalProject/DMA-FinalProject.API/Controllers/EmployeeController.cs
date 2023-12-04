@@ -31,7 +31,7 @@ namespace DMA_FinalProject.API.Controllers
         [Route("{email}")]
         public ActionResult<EmployeeDTO> Get(string email)
         {
-            var employee = dataAccess.Get(email).EmployeeToDto();
+            var employee = dataAccess.Get(email.ToLower()).EmployeeToDto();
             if (employee == null) { return NotFound(); }
 
             return Ok(employee);
@@ -41,9 +41,10 @@ namespace DMA_FinalProject.API.Controllers
         [Route("login")]
         public ActionResult<EmployeeDTO> Login([FromBody] LoginDTO data)
         {
-            if (loginDAO.Login(data.Email, data.Password))
+            string email = data.Email.ToLower();
+            if (loginDAO.Login(email, data.Password))
             {
-                return(Get(data.Email));
+                return(Get(email));
             }
             return NotFound();
         }
@@ -51,6 +52,7 @@ namespace DMA_FinalProject.API.Controllers
         [HttpPost]
         public ActionResult<bool> Add([FromBody] EmployeeDTO e)
         {
+            e.Email.ToLower();
             e.Password = BCryptTool.HashPassword(e.Password);
             return Ok(dataAccess.Add(e.EmployeeFromDto()));
         }
@@ -58,6 +60,7 @@ namespace DMA_FinalProject.API.Controllers
         [HttpPut]
         public ActionResult<bool> Update(EmployeeDTO e)
         {
+            e.Email.ToLower();
             e.Password = BCryptTool.HashPassword(e.Password);
             return Ok(dataAccess.Update(e.EmployeeFromDto()));
         }
@@ -65,7 +68,7 @@ namespace DMA_FinalProject.API.Controllers
         [HttpDelete("{email}")]
         public ActionResult<bool> Delete(string email)
         {
-            if (dataAccess.Remove(email))
+            if (dataAccess.Remove(email.ToLower()))
             {
                 return Ok();
             }
