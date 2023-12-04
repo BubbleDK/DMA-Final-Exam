@@ -62,8 +62,6 @@ namespace DMA_FinalProject.DAL.DAO
             return true;
         }
 
-
-
         public Employee? Get(dynamic key)
         {
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
