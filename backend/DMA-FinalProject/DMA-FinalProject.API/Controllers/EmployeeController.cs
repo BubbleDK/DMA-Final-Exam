@@ -31,31 +31,35 @@ namespace DMA_FinalProject.API.Controllers
         [Route("{email}")]
         public ActionResult<EmployeeDTO> Get(string email)
         {
-            var product = dataAccess.Get(email).EmployeeToDto();
-            if (product == null) { return NotFound(); }
+            var employee = dataAccess.Get(email).EmployeeToDto();
+            if (employee == null) { return NotFound(); }
 
-            return Ok(product);
-        }
-
-        [HttpGet]
-        [Route("GetHashByEmail")]
-        public ActionResult<string> GetHashByEmail(string email)
-        {
-            return Ok(loginDAO.GetHashByEmail(email));
+            return Ok(employee);
         }
 
         [HttpPost]
-        public ActionResult<bool> Add([FromBody] EmployeeDTO p)
+        [Route("login")]
+        public ActionResult<EmployeeDTO> Login([FromBody] LoginDTO data)
         {
-            p.PasswordHash = BCryptTool.HashPassword(p.PasswordHash);
-            return Ok(dataAccess.Add(p.EmployeeFromDto()));
+            if (loginDAO.Login(data.Email, data.Password))
+            {
+                return(Get(data.Email));
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        public ActionResult<bool> Add([FromBody] EmployeeDTO e)
+        {
+            e.Password = BCryptTool.HashPassword(e.Password);
+            return Ok(dataAccess.Add(e.EmployeeFromDto()));
         }
 
         [HttpPut]
-        public ActionResult<bool> Update(EmployeeDTO p)
+        public ActionResult<bool> Update(EmployeeDTO e)
         {
-            p.PasswordHash = BCryptTool.HashPassword(p.PasswordHash);
-            return Ok(dataAccess.Update(p.EmployeeFromDto()));
+            e.Password = BCryptTool.HashPassword(e.Password);
+            return Ok(dataAccess.Update(e.EmployeeFromDto()));
         }
 
         [HttpDelete("{email}")]

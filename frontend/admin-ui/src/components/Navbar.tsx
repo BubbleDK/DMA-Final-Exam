@@ -3,23 +3,23 @@ import './Navbar.css';
 import { IconLock, IconAt } from '@tabler/icons-react';
 import { Modal, Button, TextInput, PasswordInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
+import Login from '../utils/Login';
 
 function Navbar() {
   const [loginOpened, setLoginOpened] = useState(false);
 
   const form = useForm({
     initialValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
-      confirmPassword: '',
-      termsOfService: true,
     },
   });
 
-  const handleSubmit = () => {
-    console.log('submit');
+  const handleSubmit = async () => {
+    const email = form.values.email;
+    const password = form.values.password;
+
+    console.log(await Login(email, password));
   };
 
   return (
