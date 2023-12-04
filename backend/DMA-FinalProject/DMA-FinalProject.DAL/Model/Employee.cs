@@ -11,6 +11,7 @@ namespace DMA_FinalProject.DAL.Model
         public string Name { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
+        public string PasswordHash { get; set; }
         public int CompanyId { get; set; }
     }
 }

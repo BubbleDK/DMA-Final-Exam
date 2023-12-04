@@ -4,6 +4,7 @@ using DMA_FinalProject.DAL.DAO;
 using DMA_FinalProject.DAL.Model;
 using DMA_FinalProject.API.DTO;
 using DMA_FinalProject.API.Conversion;
+using DMA_FinalProject.API.Authentication;
 
 namespace DMA_FinalProject.API.Controllers
 {
@@ -12,10 +13,12 @@ namespace DMA_FinalProject.API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IDMAFinalProjectDAO<Employee> dataAccess;
+        private readonly LoginDAO loginDAO;
 
-        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess)
+        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess, LoginDAO loginDAO)
         {
             this.dataAccess = dataAccess;
+            this.loginDAO = loginDAO;
         }
 
         [HttpGet]
@@ -34,10 +37,25 @@ namespace DMA_FinalProject.API.Controllers
             return Ok(product);
         }
 
+        [HttpGet]
+        [Route("GetHashByEmail")]
+        public ActionResult<string> GetHashByEmail(string email)
+        {
+            return Ok(loginDAO.GetHashByEmail(email));
+        }
+
         [HttpPost]
         public ActionResult<bool> Add([FromBody] EmployeeDTO p)
         {
+            p.PasswordHash = BCryptTool.HashPassword(p.PasswordHash);
             return Ok(dataAccess.Add(p.EmployeeFromDto()));
+        }
+
+        [HttpPut]
+        public ActionResult<bool> Update(EmployeeDTO p)
+        {
+            p.PasswordHash = BCryptTool.HashPassword(p.PasswordHash);
+            return Ok(dataAccess.Update(p.EmployeeFromDto()));
         }
 
         [HttpDelete("{email}")]
