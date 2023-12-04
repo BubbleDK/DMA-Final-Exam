@@ -15,9 +15,10 @@ namespace DMA_FinalProject.API.Controllers
         private readonly IDMAFinalProjectDAO<Employee> dataAccess;
         private readonly LoginDAO loginDAO;
 
-        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess)
+        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess, LoginDAO loginDAO)
         {
             this.dataAccess = dataAccess;
+            this.loginDAO = loginDAO;
         }
 
         [HttpGet]
@@ -38,7 +39,7 @@ namespace DMA_FinalProject.API.Controllers
 
         [HttpGet]
         [Route("GetHashByEmail")]
-        public ActionResult<EmployeeDTO> GetHashByEmail(string email)
+        public ActionResult<string> GetHashByEmail(string email)
         {
             return Ok(loginDAO.GetHashByEmail(email));
         }

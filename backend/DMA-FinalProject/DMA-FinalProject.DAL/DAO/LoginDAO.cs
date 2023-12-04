@@ -11,7 +11,7 @@ namespace DMA_FinalProject.DAL.DAO
     {
         public string GetHashByEmail(string email)
         {
-            string sqlStatement = "SELECT email, passwordHash from fp_employee where @email = email";
+            string sqlStatement = "SELECT passwordHash from fp_employee where email = @email";
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
                 string passwordHash = null;
@@ -23,7 +23,7 @@ namespace DMA_FinalProject.DAL.DAO
                     SqlDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        passwordHash = (string)reader["PasswordHash"];
+                        passwordHash = (string)reader["passwordhash"];
                     }
                 }
                 catch (Exception)
