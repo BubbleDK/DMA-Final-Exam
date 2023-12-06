@@ -1,0 +1,33 @@
+.navbar {
+  width: 100%;
+  border-bottom: calc(0.0625rem * var(--mantine-scale)) solid transparent;
+  height: 75px;
+  background-color: var(--mantine-color-dark-6);
+  padding-right: 100px;
+  padding-left: 100px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.text-section {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.login-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+.auth-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

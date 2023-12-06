@@ -12,6 +12,23 @@ builder.Services.AddScoped <IDMAFinalProjectDAO<Employee>, EmployeeDAO>();
 builder.Services.AddScoped<LoginDAO>();
 builder.Services.AddScoped<CookieDAO>();
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalHostCorsPolicy",
+        builder => builder.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("LocalHostIPCorsPolicy",
+        builder => builder.WithOrigins("http://127.0.0.1:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
