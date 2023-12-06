@@ -1,37 +1,24 @@
-﻿using System;
+﻿using DMA_FinalProject.DAL.Model;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMA_FinalProject.DAL.Authentication;
 using DMA_FinalProject.DAL.Model;
+using DMA_FinalProject.API.
 
 namespace DMA_FinalProject.DAL.DAO
 {
     public class LoginDAO
     {
-        public bool Login(string email, string password)
+        public Employee Login(string email, string password)
         {
-            string hashedPassword = GetHashByEmail(email);
-            if (hashedPassword != null)
-            {
-                if (BCryptTool.ValidatePassword(password, hashedPassword))
-                {
-                    return true;    
-                } 
-                else
-                {
-                    throw new Exception("Wrong password");
-                }
-            }
-            else
-            {
-                throw new Exception("No match on email");
-            }
+            EmployeeDAO employeeDAO = new EmployeeDAO();
+                    return employeeDAO.Get(email);    
         }
         
-        private string GetHashByEmail(string email)
+        public string GetHashByEmail(string email)
         {
             string sqlStatement = "SELECT passwordHash from fp_employee where email = @email";
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
