@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped <IDMAFinalProjectDAO<Employee>, EmployeeDAO>();
 builder.Services.AddScoped<LoginDAO>();
+builder.Services.AddScoped<CookieDAO>();
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
