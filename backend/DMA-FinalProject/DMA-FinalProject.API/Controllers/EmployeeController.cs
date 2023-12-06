@@ -37,18 +37,6 @@ namespace DMA_FinalProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("login")]
-        public ActionResult<EmployeeDTO> Login([FromBody] LoginDTO data)
-        {
-            string email = data.Email.ToLower();
-            if (loginDAO.Login(email, data.Password))
-            {
-                return(Get(email));
-            }
-            return NotFound();
-        }
-
-        [HttpPost]
         public ActionResult<bool> Add([FromBody] EmployeeDTO e)
         {
             e.Email.ToLower();
@@ -60,7 +48,7 @@ namespace DMA_FinalProject.API.Controllers
         public ActionResult<bool> Update(EmployeeDTO e)
         {
             e.Email.ToLower();
-            e.Password = BCryptTool.HashPassword(e.Password);
+            e.PasswordHash = BCryptTool.HashPassword(e.PasswordHash);
             return Ok(dataAccess.Update(e.EmployeeFromDto()));
         }
 

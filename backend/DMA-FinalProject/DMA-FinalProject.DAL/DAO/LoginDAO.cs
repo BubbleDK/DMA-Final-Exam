@@ -5,8 +5,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DMA_FinalProject.DAL.Model;
-using DMA_FinalProject.API.
 
 namespace DMA_FinalProject.DAL.DAO
 {
