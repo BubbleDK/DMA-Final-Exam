@@ -15,10 +15,9 @@ namespace DMA_FinalProject.API.Controllers
         private readonly IDMAFinalProjectDAO<Employee> dataAccess;
         private readonly LoginDAO loginDAO;
 
-        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess, LoginDAO loginDAO)
+        public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess)
         {
             this.dataAccess = dataAccess;
-            this.loginDAO = loginDAO;
         }
 
         [HttpGet]
@@ -45,10 +44,11 @@ namespace DMA_FinalProject.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<bool> Add([FromBody] EmployeeDTO p)
+        public ActionResult<bool> Add([FromBody] EmployeeDTO e)
         {
-            p.PasswordHash = BCryptTool.HashPassword(p.PasswordHash);
-            return Ok(dataAccess.Add(p.EmployeeFromDto()));
+            e.Email.ToLower();
+            e.PasswordHash = BCryptTool.HashPassword(e.PasswordHash);
+            return Ok(dataAccess.Add(e.EmployeeFromDto()));
         }
 
         [HttpPut]
