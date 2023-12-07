@@ -1,7 +1,8 @@
-import { Container, Flex, Tabs } from '@mantine/core';
+import { Flex, Tabs } from '@mantine/core';
 import './Navigation.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { IconChartArrowsVertical, IconHome, IconWorld } from '@tabler/icons-react';
+import { useAuth } from '../utils/Auth';
 
 const links = [
     {link: "/", label: "Home", icon: IconHome},
@@ -10,8 +11,11 @@ const links = [
 ]
 
 function Navigation() {
+    const { isLoggedIn } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+
+    if (!isLoggedIn) return <div>Not logged in</div>;
 
     const link = links.map((value, index) => (
         <Tabs.Tab value={value.link} key={index} onClick={() => navigate(value.link)}>

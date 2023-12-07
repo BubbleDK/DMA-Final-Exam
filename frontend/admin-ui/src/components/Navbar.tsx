@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Navbar.css';
 import { IconLock, IconAt } from '@tabler/icons-react';
 import { Modal, Button, TextInput, PasswordInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import Login from '../utils/Login';
+import { useAuth } from '../utils/Auth';
 
 function Navbar() {
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
   const [loginOpened, setLoginOpened] = useState(false);
 
   const form = useForm({
@@ -19,12 +21,14 @@ function Navbar() {
     const email = form.values.email;
     const password = form.values.password;
 
-    console.log(await Login(email, password));
+    if (await Login(email, password)) {
+      setIsLoggedIn(true);
+    }
   };
 
   return (
     <>
-      <Modal opened={loginOpened} onClose={() => { setLoginOpened(false); }} title="Login" centered>
+      <Modal opened={!isLoggedIn} onClose={() => {  }} title="Login" centered>
         <form onSubmit={form.onSubmit(handleSubmit)} className='auth-modal'>
           <TextInput
             required
@@ -54,7 +58,7 @@ function Navbar() {
         </div>
 
         <div className='login-section'>
-          <Button onClick={() => { setLoginOpened(true); }}>Log in</Button>
+          {isLoggedIn ? <p>User is logged in</p> : <Button onClick={() => { setLoginOpened(true); }}>Log in</Button>}
         </div>
       </div>
     </>
