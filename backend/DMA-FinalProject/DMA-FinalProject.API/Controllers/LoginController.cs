@@ -62,5 +62,44 @@ namespace DMA_FinalProject.API.Controllers
             var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
             return token;
         }
+
+        [HttpPost, Route("checkToken")]
+        public IActionResult CheckToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
+            if (jwtToken == null)
+            {
+                return Unauthorized("Token not valid");
+            }
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
+                .GetBytes(configuration.GetSection("AppSettings:Token").Value)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            try
+            {
+                var claimsPrincipal = handler.ValidateToken(token, validationParameters, out var _);
+                if (claimsPrincipal.Identity.IsAuthenticated)
+                {
+                    // Token is valid
+                    return Ok("Token is valid");
+                }
+                else
+                {
+                    return Unauthorized("Token not valid");
+                }
+            }
+            catch (Exception)
+            {
+                return Unauthorized("Token not valid");
+            }
+
+        }
     }
 }

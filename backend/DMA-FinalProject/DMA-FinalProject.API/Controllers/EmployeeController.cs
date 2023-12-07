@@ -13,7 +13,6 @@ namespace DMA_FinalProject.API.Controllers
     public class EmployeeController : ControllerBase
     {
         private readonly IDMAFinalProjectDAO<Employee> dataAccess;
-        private readonly LoginDAO loginDAO;
 
         public EmployeeController(IDMAFinalProjectDAO<Employee> dataAccess)
         {
