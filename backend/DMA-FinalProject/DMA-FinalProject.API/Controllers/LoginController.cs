@@ -56,14 +56,15 @@ namespace DMA_FinalProject.API.Controllers
             var signInCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddMinutes(2),
                 signingCredentials: signInCredentials
                 );
             var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
             return token;
         }
 
-        [HttpPost, Route("checkToken")]
+        [HttpPost]
+        [Route("checkToken")]
         public IActionResult CheckToken(string token)
         {
             var handler = new JwtSecurityTokenHandler();
@@ -88,11 +89,11 @@ namespace DMA_FinalProject.API.Controllers
                 if (claimsPrincipal.Identity.IsAuthenticated)
                 {
                     // Token is valid
-                    return Ok("Token is valid");
+                    return Ok(true);
                 }
                 else
                 {
-                    return Unauthorized("Token not valid");
+                    return Unauthorized(false);
                 }
             }
             catch (Exception)
