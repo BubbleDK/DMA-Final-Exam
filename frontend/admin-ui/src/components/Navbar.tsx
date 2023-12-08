@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import './Navbar.css';
 import { IconLock, IconAt } from '@tabler/icons-react';
 import { Modal, Button, TextInput, PasswordInput } from '@mantine/core';
@@ -8,7 +7,6 @@ import { useAuth } from '../utils/Auth';
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
-  const [loginOpened, setLoginOpened] = useState(false);
 
   const form = useForm({
     initialValues: {
@@ -58,7 +56,7 @@ function Navbar() {
         </div>
 
         <div className='login-section'>
-          {isLoggedIn ? <p>User is logged in</p> : <Button onClick={() => { setLoginOpened(true); }}>Log in</Button>}
+          {isLoggedIn && <p>User is logged in</p>}
         </div>
       </div>
     </>
