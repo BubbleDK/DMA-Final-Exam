@@ -50,13 +50,14 @@ namespace DMA_FinalProject.API.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, email),
+                new Claim(ClaimTypes.SerialNumber, Guid.NewGuid().ToString())
             };
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 configuration.GetSection("AppSettings:Token").Value));
             var signInCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(2),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: signInCredentials
                 );
             var token = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
