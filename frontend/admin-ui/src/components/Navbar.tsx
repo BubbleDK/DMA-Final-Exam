@@ -2,8 +2,7 @@ import './Navbar.css';
 import { IconLock, IconAt } from '@tabler/icons-react';
 import { Modal, Button, TextInput, PasswordInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import Login from '../utils/Login';
-import { useAuth } from '../utils/Auth';
+import Login, { useAuth } from '../utils/Auth';
 
 function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useAuth();
