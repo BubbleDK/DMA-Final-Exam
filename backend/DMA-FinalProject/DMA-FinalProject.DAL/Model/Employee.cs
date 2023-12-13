@@ -13,5 +13,19 @@ namespace DMA_FinalProject.DAL.Model
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public int CompanyId { get; set; }
+
+        public Employee()
+        {
+
+        }
+
+        public Employee(string name, string phone, string email, string passwordHash, int companyId)
+        {
+            Name = name;
+            Phone = phone;
+            Email = email;
+            PasswordHash = passwordHash;
+            CompanyId = companyId;
+        }
     }
 }

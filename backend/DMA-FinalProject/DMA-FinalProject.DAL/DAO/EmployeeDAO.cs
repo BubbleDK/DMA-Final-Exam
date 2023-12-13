@@ -167,7 +167,7 @@ namespace DMA_FinalProject.DAL.DAO
                     try
                     {
                         using (SqlCommand updateCommand = new SqlCommand(
-                            "UPDATE fp_Employee SET name = @name, phone = @phone, email = @email, companyID = @companyID WHERE email = @email", conn, trans))
+                            "UPDATE fp_Employee SET name = @name, phone = @phone, companyID = @companyID WHERE email = @email", conn, trans))
                         {
                             updateCommand.Parameters.AddWithValue("@name", o.Name);
                             updateCommand.Parameters.AddWithValue("@phone", o.Phone);
