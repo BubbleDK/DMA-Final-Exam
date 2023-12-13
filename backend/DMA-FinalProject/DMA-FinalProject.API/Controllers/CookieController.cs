@@ -1,6 +1,7 @@
 ﻿using DMA_FinalProject.API.Conversion;
 using DMA_FinalProject.API.DTO;
 using DMA_FinalProject.DAL.DAO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DMA_FinalProject.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class CookieController : ControllerBase
     {
         private readonly CookieDAO cookieDAO;
