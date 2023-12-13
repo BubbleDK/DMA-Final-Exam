@@ -108,12 +108,59 @@ namespace DMA_FinalProject.DAL.DAO
 
         public bool Remove(dynamic key)
         {
-            throw new NotImplementedException();
+            SqlTransaction trans;
+            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open();
+                using (trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand deleteCommand = new SqlCommand("DELETE FROM fp_Domain WHERE url = @url", conn, trans))
+                        {
+                            deleteCommand.Parameters.AddWithValue("@url", key);
+                            deleteCommand.ExecuteNonQuery();
+                            trans.Commit();
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
 
-        public bool Update(Domain o)
+        public bool Update(Domain d)
         {
-            throw new NotImplementedException();
+            SqlTransaction trans;
+            using(SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open();
+                using(trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand updateCommand = new SqlCommand(
+                            "UPDATE fp_Domain SET name = @name, companyId = @companyId WHERE url = @url", conn, trans))
+                        {
+                            updateCommand.Parameters.AddWithValue("@url", d.Url);
+                            updateCommand.Parameters.AddWithValue("@name", d.Name);
+                            updateCommand.Parameters.AddWithValue("@companyId", d.CompanyId);
+                            updateCommand.ExecuteNonQuery();
+                        }
+                        trans.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw new Exception("Update exception");
+                    }
+                }
+            }
+            return true;
         }
     }
 }
