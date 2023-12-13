@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../utils/Auth';
+import './index.css'
 
 const Statistics = () => {
   const { isLoggedIn } = useAuth();
@@ -7,7 +8,9 @@ const Statistics = () => {
   if (!isLoggedIn) return;
   
   return (
-    <div>Statistics</div>
+    <div className="statistics-container">
+      Statistics
+    </div>
   )
 }
 

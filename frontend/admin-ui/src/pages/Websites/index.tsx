@@ -1,5 +1,6 @@
 import React from 'react'
 import { useAuth } from '../../utils/Auth';
+import './index.css'
 
 const Websites = () => {
   const { isLoggedIn } = useAuth();
@@ -7,7 +8,9 @@ const Websites = () => {
   if (!isLoggedIn) return;
 
   return (
-    <div>Websites</div>
+    <div className="websites-container">
+      Websites
+    </div>
   )
 }
 
