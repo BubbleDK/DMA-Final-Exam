@@ -15,7 +15,7 @@ function Navigation() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    if (!isLoggedIn) return <div>Not logged in</div>;
+    if (!isLoggedIn) return;
 
     const link = links.map((value, index) => (
         <Tabs.Tab value={value.link} key={index} onClick={() => navigate(value.link)}>

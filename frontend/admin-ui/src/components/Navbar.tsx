@@ -23,6 +23,12 @@ function Navbar() {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+  
+    setIsLoggedIn(false);
+  };
+
   return (
     <>
       <Modal opened={!isLoggedIn} onClose={() => {  }} title="Login" centered>
@@ -55,7 +61,7 @@ function Navbar() {
         </div>
 
         <div className='login-section'>
-          {isLoggedIn && <p>User is logged in</p>}
+          {isLoggedIn && <Button onClick={() => { logout(); }}>Log out</Button>}
         </div>
       </div>
     </>
