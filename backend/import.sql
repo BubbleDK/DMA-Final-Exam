@@ -44,9 +44,9 @@ CREATE TABLE fp_Cookie(
 );
 
 CREATE TABLE fp_User(
-  id VARCHAR(50) NOT NULL,
+  browserId VARCHAR(50) NOT NULL,
 
-  CONSTRAINT PK_User PRIMARY KEY (id)
+  CONSTRAINT PK_User PRIMARY KEY (browserId)
 );
 
 CREATE TABLE fp_UserConsent(
@@ -55,7 +55,7 @@ CREATE TABLE fp_UserConsent(
   userID VARCHAR(50) NOT NULL,
 
   CONSTRAINT FK_UserConsent_Cookie FOREIGN KEY (cookieID) REFERENCES fp_Cookie(id) ON DELETE CASCADE,
-  CONSTRAINT FK_UserConsent_User FOREIGN KEY (userID) REFERENCES fp_User(id) ON DELETE CASCADE,
+  CONSTRAINT FK_UserConsent_User FOREIGN KEY (userID) REFERENCES fp_User(browserId) ON DELETE CASCADE,
   CONSTRAINT PK_UserConsent PRIMARY KEY (userID, cookieID)
 );
 
@@ -74,6 +74,6 @@ INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company2.com', 'Compan
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie1', 'value1', '2020-01-01', 'www.company1.com', 'category1');
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie2', 'value2', '2020-01-01', 'www.company1.com', 'category2');
 
-INSERT INTO fp_User (id) VALUES ('1');
+INSERT INTO fp_User (browserId) VALUES ('1');
 
 INSERT INTO fp_UserConsent (date, cookieID, userID) VALUES ('2020-01-01', 1, '1');
