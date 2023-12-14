@@ -35,6 +35,7 @@ const Websites = () => {
 
   const websitesRow = websites.map((website) => (
     <Table.Tr key={website.name}>
+      <Table.Td>{website.name}</Table.Td>
       <Table.Td>{website.url}</Table.Td>
       <Table.Td>12/01/2024</Table.Td>
       <Table.Td>24</Table.Td>
@@ -58,6 +59,7 @@ const Websites = () => {
           <Table>
             <Table.Thead>
               <Table.Tr>
+                <Table.Th>Domæne navn</Table.Th>
                 <Table.Th>Domæne URL</Table.Th>
                 <Table.Th>Sidste scan</Table.Th>
                 <Table.Th>Cookies</Table.Th>
