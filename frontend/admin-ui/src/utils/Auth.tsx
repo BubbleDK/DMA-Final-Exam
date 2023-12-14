@@ -5,6 +5,7 @@ type AuthContextType = {
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   employeeData?: Employee;
+  setEmployeeData: (employee: Employee) => void;
 };
 
 type Employee = {
@@ -71,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, employeeData }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, employeeData, setEmployeeData }}>
       {children}
     </AuthContext.Provider>
   );

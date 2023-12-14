@@ -52,20 +52,22 @@ const Websites = () => {
 
   return (
     <div className="websites-container">
-      <h2>Domæneoversigt</h2>
-      <ScrollArea h={735}>
-        <Table>
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th>Domæne URL</Table.Th>
-              <Table.Th>Sidste scan</Table.Th>
-              <Table.Th>Cookies</Table.Th>
-              <Table.Th></Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{websitesRow}</Table.Tbody>
-        </Table>
-      </ScrollArea>
+      <div className='websites-wrapper'>
+        <h2>Domæneoversigt</h2>
+        <ScrollArea h={400}>
+          <Table>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Domæne URL</Table.Th>
+                <Table.Th>Sidste scan</Table.Th>
+                <Table.Th>Cookies</Table.Th>
+                <Table.Th></Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{websitesRow}</Table.Tbody>
+          </Table>
+        </ScrollArea>
+      </div>
     </div>
   )
 }
