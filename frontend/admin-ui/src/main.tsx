@@ -5,23 +5,17 @@ import './index.css'
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import {
-  createBrowserRouter,
-  RouterProvider,
+  HashRouter,
 } from "react-router-dom";
 import { AuthProvider } from './utils/Auth.tsx';
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <MantineProvider defaultColorScheme="dark" theme={{fontFamily: 'Nunito, sans-serif'}}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <HashRouter>
+          <App/>
+        </HashRouter>
       </AuthProvider>
     </MantineProvider>
   </React.StrictMode>,

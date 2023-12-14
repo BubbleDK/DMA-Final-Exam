@@ -4,7 +4,16 @@ import { createContext, useState, useContext, useEffect, ReactNode } from 'react
 type AuthContextType = {
   isLoggedIn: boolean;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
+  employeeData?: Employee;
+  setEmployeeData: (employee: Employee) => void;
 };
+
+type Employee = {
+  name: string;
+  phone: string;
+  email: string;
+  companyId: number;
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -20,6 +29,7 @@ const CheckToken = async (token: string) => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [employeeData, setEmployeeData] = useState<Employee>();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -28,7 +38,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await CheckToken(token);
 
         if (data) {
-          setIsLoggedIn(true);
+          const employeeEmail = localStorage.getItem('employeeEmail');
+          if (employeeEmail) {
+            try {
+              // Encode the email to ensure special characters are properly handled in the URL
+              const encodedEmail = encodeURIComponent(employeeEmail);
+              const url = `https://localhost:7163/employees/${encodedEmail}`;
+      
+              const response = await axios.get(url);
+              // Handle the response data here
+              setEmployeeData({
+                name: response.data.name,
+                phone: response.data.phone,
+                email: response.data.email,
+                companyId: response.data.companyId,
+              })
+              setIsLoggedIn(true);
+            } catch (error) {
+              console.error('Error fetching data: ', error);
+              // Handle the error here
+              setIsLoggedIn(false);
+            }
+          } else {
+            setIsLoggedIn(false);
+          }
         } else {
           setIsLoggedIn(false);
         }
@@ -39,7 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, employeeData, setEmployeeData }}>
       {children}
     </AuthContext.Provider>
   );
@@ -61,6 +94,7 @@ const Login = async (email: string, password: string) => {
     });
 
     localStorage.setItem('token', response.data.token);
+    localStorage.setItem('employeeEmail', response.data.email)
 
     return response.data;
   } catch (error) {

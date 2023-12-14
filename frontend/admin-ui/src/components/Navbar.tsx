@@ -5,7 +5,7 @@ import { useForm } from '@mantine/form';
 import Login, { useAuth } from '../utils/Auth';
 
 function Navbar() {
-  const { isLoggedIn, setIsLoggedIn } = useAuth();
+  const { isLoggedIn, setIsLoggedIn, setEmployeeData } = useAuth();
 
   const form = useForm({
     initialValues: {
@@ -18,9 +18,23 @@ function Navbar() {
     const email = form.values.email;
     const password = form.values.password;
 
-    if (await Login(email, password)) {
+    const loginEmployee = await Login(email, password);
+    if (loginEmployee) {
+      setEmployeeData({
+        name: loginEmployee.name,
+        phone: loginEmployee.phone,
+        email: loginEmployee.email,
+        companyId: loginEmployee.companyId,
+      })
       setIsLoggedIn(true);
     }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("employeeEmail");
+  
+    setIsLoggedIn(false);
   };
 
   return (
@@ -55,7 +69,7 @@ function Navbar() {
         </div>
 
         <div className='login-section'>
-          {isLoggedIn && <p>User is logged in</p>}
+          {isLoggedIn && <Button onClick={() => { logout(); }}>Log out</Button>}
         </div>
       </div>
     </>
