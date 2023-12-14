@@ -9,7 +9,7 @@ const Statistics = () => {
   
   return (
     <div className="statistics-container">
-      Statistics
+      Statistics - Work in progress
     </div>
   )
 }
