@@ -47,7 +47,7 @@ namespace DMA_FinalProject.DAL.DAO
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
                 using SqlCommand command = new SqlCommand(
-                    "SELECT * FROM fp_Domain WHERE companyId = @companyId", conn);
+                    "SELECT url, name, companyID, cookieAmount FROM fp_Domain LEFT JOIN fp_ScanHistory ON url = domainURL WHERE companyId = @companyId", conn);
                 command.Parameters.AddWithValue("@companyId", companyId);
                 {
                     try
@@ -56,12 +56,26 @@ namespace DMA_FinalProject.DAL.DAO
                         SqlDataReader reader = command.ExecuteReader();
                         while (reader.Read())
                         {
-                            Domain domain = new Domain()
+                            Domain domain;
+                            if (reader["cookieAmount"] != DBNull.Value)
                             {
-                                Url = (string)reader["url"],
-                                Name = (string)reader["name"],
-                                CompanyId = (int)reader["companyID"]
-                            };
+                                domain = new()
+                                {
+                                    Url = (string)reader["url"],
+                                    Name = (string)reader["name"],
+                                    CompanyId = (int)reader["companyID"],
+                                    CookieAmount = (int)reader["cookieAmount"]
+                                };
+                            }
+                            else
+                            {
+                                domain = new()
+                                {
+                                    Url = (string)reader["url"],
+                                    Name = (string)reader["name"],
+                                    CompanyId = (int)reader["companyID"],
+                                };
+                            }
                             domainList.Add(domain);
                         }
                     }
@@ -74,7 +88,7 @@ namespace DMA_FinalProject.DAL.DAO
             }
             return domainList;
         }
-
+        //TODO: SLettes
         public IEnumerable<Domain> GetAll()
         {
             string sqlStatement = "SELECT url, name, companyID, cookieAmount FROM fp_Domain LEFT JOIN fp_ScanHistory ON url = domainURL;";
