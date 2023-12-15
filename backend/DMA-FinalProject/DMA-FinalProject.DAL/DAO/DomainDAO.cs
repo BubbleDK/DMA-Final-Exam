@@ -77,7 +77,7 @@ namespace DMA_FinalProject.DAL.DAO
 
         public IEnumerable<Domain> GetAll()
         {
-            string sqlStatement = "SELECT * FROM fp_Domain;";
+            string sqlStatement = "SELECT url, name, companyID, cookieAmount FROM fp_Domain LEFT JOIN fp_ScanHistory ON url = domainURL;";
             List<Domain> domains = new();
 
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
@@ -89,13 +89,26 @@ namespace DMA_FinalProject.DAL.DAO
                     SqlDataReader reader = getAllCommand.ExecuteReader();
                     while (reader.Read())
                     {
-                        Domain domain = new()
+                        Domain domain;
+                        if (reader["cookieAmount"] != DBNull.Value) {
+                            domain = new()
+                            {
+                                Url = (string)reader["url"],
+                                Name = (string)reader["name"],
+                                CompanyId = (int)reader["companyID"],
+                                CookieAmount = (int)reader["cookieAmount"]
+                            }; 
+                        }
+                        else
                         {
-                            Url = (string)reader["url"],
-                            Name = (string)reader["name"],
-                            CompanyId = (int)reader["companyID"]
-                        };
-                        domains.Add(domain);
+                            domain = new()
+                            {
+                                Url = (string)reader["url"],
+                                Name = (string)reader["name"],
+                                CompanyId = (int)reader["companyID"],
+                            };
+                        }
+                            domains.Add(domain);
                     }
                 }
                 catch (Exception)

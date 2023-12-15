@@ -11,5 +11,6 @@ namespace DMA_FinalProject.DAL.Model
         public string Url { get; set; }
         public string Name { get; set; }
         public int CompanyId { get; set; }
+        public int CookieAmount { get; set; } = 0;
     }
 }
