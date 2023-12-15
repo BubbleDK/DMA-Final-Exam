@@ -1,6 +1,6 @@
 USE [DMA-CSD-S212_10407505];
 
-DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_Domain, fp_Company;
+DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_ScanHistory, fp_Domain, fp_Company;
 go
 
 CREATE TABLE fp_Company(
@@ -80,6 +80,8 @@ INSERT INTO fp_Employee (name, email, phone, passwordHash, companyID) VALUES ('E
 
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company1.com', 'Company1', 1);
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company2.com', 'Company2', 2);
+
+INSERT INTO fp_ScanHistory(domainURL, scanDate, cookieAmount) VALUES ('www.company1.com', '2020-01-01', 32);
 
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie1', 'value1', '2020-01-01', 'www.company1.com', 'category1');
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie2', 'value2', '2020-01-01', 'www.company1.com', 'category2');
