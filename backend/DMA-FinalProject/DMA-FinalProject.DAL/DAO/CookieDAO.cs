@@ -42,8 +42,9 @@ namespace DMA_FinalProject.DAL.DAO
             return true;
         }
 
-        public Cookie Get(dynamic key)
+        public IEnumerable<Cookie> Get(dynamic key)
         {
+            List<Cookie> cookies = new();
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
                 using SqlCommand command = new SqlCommand(
@@ -64,7 +65,7 @@ namespace DMA_FinalProject.DAL.DAO
                                 DomainURL = (string)reader["domainurl"],
                                 Category = (string)reader["category"]
                             };
-                            return cookie;
+                            cookies.Add(cookie);
                         }
                     }
                     catch (Exception)
@@ -74,7 +75,7 @@ namespace DMA_FinalProject.DAL.DAO
                     }
                 }
             }
-            return null;
+            return cookies;
         }
 
         public IEnumerable<Cookie> GetAll()
@@ -108,6 +109,33 @@ namespace DMA_FinalProject.DAL.DAO
                 }
             }
             return cookies;
+        }
+
+        public bool Remove(string cookieName)
+        {
+            SqlTransaction trans;
+            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            {
+                conn.Open();
+                using (trans = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand deleteCommand = new SqlCommand("DELETE FROM fp_Cookie WHERE name = @name", conn, trans))
+                        {
+                            deleteCommand.Parameters.AddWithValue("@name", cookieName);
+                            deleteCommand.ExecuteNonQuery();
+                            trans.Commit();
+                            return true;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        trans.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }

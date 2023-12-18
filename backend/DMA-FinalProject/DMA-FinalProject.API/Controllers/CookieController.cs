@@ -25,14 +25,14 @@ namespace DMA_FinalProject.API.Controllers
 
         // GET api/<CookieController>/5
         [HttpGet("{domainURL}")]
-        public ActionResult<CookieDTO> Get(string domainURL)
+        public ActionResult<IEnumerable<CookieDTO>> Get(string domainURL)
         {
-            return Ok(cookieDAO.Get(domainURL).CookieToDto());
+            return Ok(cookieDAO.Get(domainURL).CookieToDtos());
         }
 
         // POST api/<CookieController>
         [HttpPost]
-        public ActionResult<bool> Post([FromBody] CookieDTO cookieDTO)
+        public ActionResult<bool> Add([FromBody] CookieDTO cookieDTO)
         {
             return Ok(cookieDAO.Add(cookieDTO.CookieFromDto()));
         }
