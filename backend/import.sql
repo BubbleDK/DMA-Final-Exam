@@ -1,6 +1,6 @@
 USE [DMA-CSD-S212_10407505];
 
-DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_Domain, fp_Company;
+DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_ScanHistory, fp_Domain, fp_Company;
 go
 
 CREATE TABLE fp_Company(
@@ -31,6 +31,16 @@ CREATE TABLE fp_Domain(
   CONSTRAINT PK_Domain PRIMARY KEY (url)
 );
 
+CREATE TABLE fp_ScanHistory(
+  id INT IDENTITY(1,1) NOT NULL,
+  domainURL VARCHAR(50) NOT NULL,
+  scanDate VARCHAR(50) NOT NULL,
+  cookieAmount INT NOT NULL,
+
+  CONSTRAINT FK_scanHistory FOREIGN KEY (domainURL) REFERENCES fp_Domain(url) ON DELETE CASCADE,
+  CONSTRAINT PK_id PRIMARY KEY (id)
+);
+
 CREATE TABLE fp_Cookie(
   id INT IDENTITY(1,1) NOT NULL,
   name VARCHAR(50) NOT NULL,
@@ -44,9 +54,9 @@ CREATE TABLE fp_Cookie(
 );
 
 CREATE TABLE fp_User(
-  id VARCHAR(50) NOT NULL,
+  browserId VARCHAR(50) NOT NULL,
 
-  CONSTRAINT PK_User PRIMARY KEY (id)
+  CONSTRAINT PK_User PRIMARY KEY (browserId)
 );
 
 CREATE TABLE fp_UserConsent(
@@ -55,7 +65,7 @@ CREATE TABLE fp_UserConsent(
   userID VARCHAR(50) NOT NULL,
 
   CONSTRAINT FK_UserConsent_Cookie FOREIGN KEY (cookieID) REFERENCES fp_Cookie(id) ON DELETE CASCADE,
-  CONSTRAINT FK_UserConsent_User FOREIGN KEY (userID) REFERENCES fp_User(id) ON DELETE CASCADE,
+  CONSTRAINT FK_UserConsent_User FOREIGN KEY (userID) REFERENCES fp_User(browserId) ON DELETE CASCADE,
   CONSTRAINT PK_UserConsent PRIMARY KEY (userID, cookieID)
 );
 
@@ -71,9 +81,11 @@ INSERT INTO fp_Employee (name, email, phone, passwordHash, companyID) VALUES ('E
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company1.com', 'Company1', 1);
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company2.com', 'Company2', 2);
 
+INSERT INTO fp_ScanHistory(domainURL, scanDate, cookieAmount) VALUES ('www.company1.com', '2020-01-01', 32);
+
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie1', 'value1', '2020-01-01', 'www.company1.com', 'category1');
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie2', 'value2', '2020-01-01', 'www.company1.com', 'category2');
 
-INSERT INTO fp_User (id) VALUES ('1');
+INSERT INTO fp_User (browserId) VALUES ('1');
 
 INSERT INTO fp_UserConsent (date, cookieID, userID) VALUES ('2020-01-01', 1, '1');
