@@ -9,6 +9,7 @@ type Website = {
   url: string;
   name: string;
   companyId: number;
+  cookieAmount: number;
 }
 
 const Websites = () => {
@@ -38,7 +39,7 @@ const Websites = () => {
       <Table.Td>{website.name}</Table.Td>
       <Table.Td>{website.url}</Table.Td>
       <Table.Td>12/01/2024</Table.Td>
-      <Table.Td>24</Table.Td>
+      <Table.Td>{website.cookieAmount}</Table.Td>
       <Table.Td>
         <Group>
           <ActionIcon variant="light" color="gray" aria-label="Settings">
