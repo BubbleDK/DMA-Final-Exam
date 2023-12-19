@@ -8,7 +8,7 @@ using DMA_FinalProject.API.Authentication;
 
 namespace DMA_FinalProject.API.Controllers
 {
-    [Route("employees")]
+    [Route("api/[controller]s")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
