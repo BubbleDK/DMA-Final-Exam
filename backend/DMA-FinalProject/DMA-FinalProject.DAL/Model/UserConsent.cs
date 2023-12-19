@@ -8,7 +8,11 @@ namespace DMA_FinalProject.DAL.Model
 {
     public class UserConsent
     {
-        public int CookieId { get; set; }
         public string UserId { get; set; }
+        public string DomainUrl { get; set; }
+        public bool Necessary { get; set; }
+        public bool Functionality { get; set; }
+        public bool Analytics { get; set; }
+        public bool Marketing { get; set; }
     }
 }

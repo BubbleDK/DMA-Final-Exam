@@ -21,11 +21,16 @@ namespace DMA_FinalProject.DAL.DAO
                     try
                     {
                         using (SqlCommand insertCommand = new SqlCommand(
-                            "INSERT INTO fp_userconsent VALUES (@date, @cookieID, @userID);", conn, trans))
+                            "INSERT INTO fp_UserConsent VALUES (@date, @userID, @domainUrl, @necessary, @functionality, @analytics, @marketing);", conn, trans))
                         {
                             insertCommand.Parameters.AddWithValue("@date", DateTime.Now);
-                            insertCommand.Parameters.AddWithValue("@cookieID", userConsent.CookieId);
                             insertCommand.Parameters.AddWithValue("@userID", userConsent.UserId);
+                            insertCommand.Parameters.AddWithValue("domainUrl", userConsent.DomainUrl);
+                            insertCommand.Parameters.AddWithValue("@necessary", userConsent.Necessary);
+                            insertCommand.Parameters.AddWithValue("@functionality", userConsent.Functionality);
+                            insertCommand.Parameters.AddWithValue("@analytics", userConsent.Analytics);
+                            insertCommand.Parameters.AddWithValue("@marketing", userConsent.Marketing);
+
                             insertCommand.ExecuteNonQuery();
                         }
                         trans.Commit();
@@ -40,15 +45,14 @@ namespace DMA_FinalProject.DAL.DAO
             return true;
         }
 
-        public IEnumerable<UserConsent> Get(string userId)
+        public UserConsent? Get(string userId, string domainUrl)
         {
-            List<UserConsent> userConsentList = new List<UserConsent>();
-
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
                 using SqlCommand command = new SqlCommand(
-                    "SELECT * FROM fp_UserConsent WHERE userId = @userId", conn);
+                    "SELECT * FROM fp_UserConsent WHERE userId = @userId and domainUrl = @domainUrl", conn);
                 command.Parameters.AddWithValue("@userId", userId);
+                command.Parameters.AddWithValue("@domainUrl", domainUrl);
                 {
                     try
                     {
@@ -59,10 +63,14 @@ namespace DMA_FinalProject.DAL.DAO
                             UserConsent userConsent;
                             userConsent = new()
                             {
-                                CookieId = (int)reader["cookieID"],
                                 UserId = (string)reader["userID"],
+                                DomainUrl = (string)reader["domainUrl"],
+                                Necessary = (bool)reader["necessary"],
+                                Functionality = (bool)reader["functionality"],
+                                Analytics = (bool)reader["analytics"],
+                                Marketing = (bool)reader["marketing"]
                             };
-                            userConsentList.Add(userConsent);
+                            return userConsent;
                         }
                     }
                     catch (Exception)
@@ -71,35 +79,42 @@ namespace DMA_FinalProject.DAL.DAO
                     }
                 }
             }
-            return userConsentList;
+            return null;
         }
         
-        public bool Remove(int cookieId, string userId)
+        public bool Update(UserConsent uc)
         {
             SqlTransaction trans;
-            using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
+            using(SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
             {
                 conn.Open();
                 using (trans = conn.BeginTransaction())
                 {
                     try
                     {
-                        using (SqlCommand deleteCommand = new SqlCommand("DELETE FROM fp_UserConsent WHERE cookieID = @cookieID AND userID = @userID", conn, trans))
+                        using (SqlCommand updateCommand = new SqlCommand(
+                            "UPDATE fp_UserConsent SET date = @date, necessary = @necessary, functionality = @functionality, analytics = @analytics, " +
+                            "marketing = @marketing WHERE userId = @userId AND domainUrl = @domainUrl", conn, trans))
                         {
-                            deleteCommand.Parameters.AddWithValue("@cookieID", cookieId);
-                            deleteCommand.Parameters.AddWithValue("@userID", userId);
-                            deleteCommand.ExecuteNonQuery();
-                            trans.Commit();
-                            return true;
+                            updateCommand.Parameters.AddWithValue("@userId", uc.UserId);
+                            updateCommand.Parameters.AddWithValue("@domainUrl", uc.DomainUrl);
+                            updateCommand.Parameters.AddWithValue("@date", DateTime.Now);
+                            updateCommand.Parameters.AddWithValue("@necessary", uc.Necessary);
+                            updateCommand.Parameters.AddWithValue("@functionality", uc.Functionality);
+                            updateCommand.Parameters.AddWithValue("@analytics", uc.Analytics);
+                            updateCommand.Parameters.AddWithValue("@marketing", uc.Marketing);
+                            updateCommand.ExecuteNonQuery();
                         }
+                        trans.Commit();
                     }
                     catch (Exception)
                     {
                         trans.Rollback();
-                        throw;
+                        throw new Exception("Update exception");
                     }
                 }
             }
+            return true;
         }
     }
 }

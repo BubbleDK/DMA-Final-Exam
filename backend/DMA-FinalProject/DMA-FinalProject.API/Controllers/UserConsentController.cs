@@ -18,10 +18,10 @@ namespace DMA_FinalProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("{browserId}")]
-        public ActionResult<IEnumerable<UserConsentDTO>> Get(string browserId)
+        [Route("{browserId}/{domainUrl}")]
+        public ActionResult<IEnumerable<UserConsentDTO>> Get(string browserId, string domainUrl)
         {
-            return Ok(dataAccess.Get(browserId).UserConsentToDtos());
+            return Ok(dataAccess.Get(browserId, domainUrl).UserConsentToDto());
         }
 
         [HttpPost]
@@ -30,11 +30,10 @@ namespace DMA_FinalProject.API.Controllers
             return Ok(dataAccess.Add(uc.UserConsentFromDto()));
         }
 
-        [HttpDelete]
-        [Route("{cookieId}/{browserId}")]
-        public ActionResult<bool> Delete(int cookieId, string browserId)
+        [HttpPut]
+        public ActionResult<bool> Update([FromBody] UserConsentDTO uc)
         {
-            return Ok(dataAccess.Remove(cookieId, browserId));   
+            return Ok(dataAccess.Update(uc.UserConsentFromDto()));   
         }
     }
 }

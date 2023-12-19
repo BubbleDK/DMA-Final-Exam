@@ -2,18 +2,25 @@
 {
     public class UserConsentDTO
     {
-        public int CookieId { get; set; }
         public string UserId { get; set; }
+        public string DomainUrl { get; set; }
+        public bool Necessary { get; set; }
+        public bool Functionality { get; set; }
+        public bool Analytics { get; set; }
+        public bool Marketing { get; set; }
 
         public UserConsentDTO()
         {
 
         }
 
-        public UserConsentDTO(int cookieId, string userId)
+        public UserConsentDTO(string userId, bool necessary, bool functionality, bool analytics, bool marketing)
         {
-            CookieId = cookieId;
             UserId = userId;
+            Necessary = necessary;
+            Functionality = functionality;
+            Analytics = analytics;
+            Marketing = marketing;
         }
     }
 }
