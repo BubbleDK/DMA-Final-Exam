@@ -14,6 +14,8 @@ builder.Services.AddScoped<IDMAFinalProjectDAO<Employee>, EmployeeDAO>();
 builder.Services.AddScoped<IDMAFinalProjectDAO<User>, UserDAO>();
 builder.Services.AddScoped<LoginDAO>();
 builder.Services.AddScoped<CookieDAO>();
+builder.Services.AddScoped<DomainDAO>();
+builder.Services.AddScoped<UserConsentDAO>();
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>

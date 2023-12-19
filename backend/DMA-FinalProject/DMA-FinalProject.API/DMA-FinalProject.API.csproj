@@ -20,4 +20,10 @@
     <ProjectReference Include="..\DMA-FinalProject.DAL\DMA-FinalProject.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DMA_FinalProject.API.Controllers
 {
-    [Route("users")]
+    [Route("api/[controller]s")]
     [ApiController, Authorize]
     public class UserController : Controller
     {

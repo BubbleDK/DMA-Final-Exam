@@ -1,6 +1,6 @@
 USE [DMA-CSD-S212_10407505];
 
-DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_Domain, fp_Company;
+DROP TABLE fp_UserConsent, fp_User, fp_Employee, fp_Cookie, fp_ScanHistory, fp_Domain, fp_Company;
 go
 
 CREATE TABLE fp_Company(
@@ -29,6 +29,16 @@ CREATE TABLE fp_Domain(
 
   CONSTRAINT FK_Domain_Company FOREIGN KEY (companyID) REFERENCES fp_Company(id) ON DELETE CASCADE,
   CONSTRAINT PK_Domain PRIMARY KEY (url)
+);
+
+CREATE TABLE fp_ScanHistory(
+  id INT IDENTITY(1,1) NOT NULL,
+  domainURL VARCHAR(50) NOT NULL,
+  scanDate VARCHAR(50) NOT NULL,
+  cookieAmount INT NOT NULL,
+
+  CONSTRAINT FK_scanHistory FOREIGN KEY (domainURL) REFERENCES fp_Domain(url) ON DELETE CASCADE,
+  CONSTRAINT PK_id PRIMARY KEY (id)
 );
 
 CREATE TABLE fp_Cookie(
@@ -70,6 +80,8 @@ INSERT INTO fp_Employee (name, email, phone, passwordHash, companyID) VALUES ('E
 
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company1.com', 'Company1', 1);
 INSERT INTO fp_Domain (url, name, companyID) VALUES ('www.company2.com', 'Company2', 2);
+
+INSERT INTO fp_ScanHistory(domainURL, scanDate, cookieAmount) VALUES ('www.company1.com', '2020-01-01', 32);
 
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie1', 'value1', '2020-01-01', 'www.company1.com', 'category1');
 INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES ('cookie2', 'value2', '2020-01-01', 'www.company1.com', 'category2');
