@@ -61,12 +61,16 @@ CREATE TABLE fp_User(
 
 CREATE TABLE fp_UserConsent(
   date DATETIME NOT NULL,
-  cookieID INT NOT NULL,
   userID VARCHAR(50) NOT NULL,
+  domainUrl VARCHAR(50) NOT NULL,
+  necessary BIT NOT NULL,
+  functionality BIT NOT NULL,
+  analytics BIT NOT NULL,
+  marketing BIT NOT NULL,
 
-  CONSTRAINT FK_UserConsent_Cookie FOREIGN KEY (cookieID) REFERENCES fp_Cookie(id) ON DELETE CASCADE,
   CONSTRAINT FK_UserConsent_User FOREIGN KEY (userID) REFERENCES fp_User(browserId) ON DELETE CASCADE,
-  CONSTRAINT PK_UserConsent PRIMARY KEY (userID, cookieID)
+  CONSTRAINT FK_UserConsent_Domain FOREIGN KEY (domainUrl) REFERENCES fp_Domain(url) ON DELETE CASCADE,
+  CONSTRAINT PK_UserConsent PRIMARY KEY (userID, domainUrl)
 );
 
 
@@ -88,4 +92,4 @@ INSERT INTO fp_Cookie (name, value, expirationDate, domainURL, category) VALUES 
 
 INSERT INTO fp_User (browserId) VALUES ('1');
 
-INSERT INTO fp_UserConsent (date, cookieID, userID) VALUES ('2020-01-01', 1, '1');
+INSERT INTO fp_UserConsent (date, userID, domainUrl, necessary, functionality, analytics, marketing) VALUES ('2020-01-01', '1', 'www.company1.com', 1, 0, 0, 0);
