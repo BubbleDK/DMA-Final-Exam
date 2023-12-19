@@ -6,7 +6,7 @@ using DMA_FinalProject.API.Conversion;
 
 namespace DMA_FinalProject.API.Controllers
 {
-    [Route("userConsent")]
+    [Route("api/[controller]s")]
     [ApiController]
     public class UserConsentController : ControllerBase
     {
