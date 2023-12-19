@@ -15,6 +15,9 @@ namespace Tests
     /// <summary>
     /// This test class contains xUnit tests for the LoginController, specifically focusing on the login functionality.
     /// </summary>
+    [CollectionDefinition("SequentialTests", DisableParallelization = true)]
+
+    [Collection("SequentialTests")]
     public class LoginAPITests
     {
         // Configuration instance for test setup
