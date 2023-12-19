@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DMA_FinalProject.API.Controllers
 {
-    [Route("domains")]
+    [Route("api/[controller]s")]
     [ApiController]
     public class DomainController : ControllerBase
     {

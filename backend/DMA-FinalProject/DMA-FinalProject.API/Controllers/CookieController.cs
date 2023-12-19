@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DMA_FinalProject.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     [ApiController]
     public class CookieController : ControllerBase
     {
