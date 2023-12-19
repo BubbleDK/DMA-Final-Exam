@@ -5,11 +5,12 @@ using DMA_FinalProject.DAL.Model;
 using DMA_FinalProject.API.DTO;
 using DMA_FinalProject.API.Conversion;
 using DMA_FinalProject.API.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DMA_FinalProject.API.Controllers
 {
     [Route("api/[controller]s")]
-    [ApiController]
+    [ApiController, Authorize]
     public class EmployeeController : ControllerBase
     {
         private readonly IDMAFinalProjectDAO<Employee> dataAccess;

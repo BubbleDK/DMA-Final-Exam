@@ -1,12 +1,13 @@
 ﻿using DMA_FinalProject.API.Conversion;
 using DMA_FinalProject.API.DTO;
 using DMA_FinalProject.DAL.DAO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DMA_FinalProject.API.Controllers
 {
     [Route("api/[controller]s")]
-    [ApiController]
+    [ApiController, Authorize]
     public class DomainController : ControllerBase
     {
         private readonly DomainDAO domainDAO;
