@@ -16,27 +16,29 @@ const args = yargs(process.argv.slice(2))
         type: 'string',
         demandOption: true
     })
-    .parse()
+    .parse();
 
-
-const cookies = new Set();
-const storage = new Set();
-
-async function _store(type, change) {
-    return new Promise((resolve, reject) => {
-        if (type === 'cookie') {
-            cookies.add(change);
-            resolve();
-        }
-        else if (type === 'storage') {
-            storage.add(change);
-            resolve();
-        }
-        else {
-            reject();
-        }
-    });
-}
+    const cookies = new Set();
+    const cookieValues = new Set();
+    const storage = new Set();
+    
+    async function _store(type, change) {
+        return new Promise((resolve, reject) => {
+            if (type === 'cookie') {
+                // Check if the cookie value already exists
+                if (!cookieValues.has(change.value)) {
+                    cookies.add(change);
+                    cookieValues.add(change.value);
+                }
+                resolve();
+            } else if (type === 'storage') {
+                storage.add(change);
+                resolve();
+            } else {
+                reject();
+            }
+        });
+    }
 
 const inject = () => {
     if (cookieStore) {
