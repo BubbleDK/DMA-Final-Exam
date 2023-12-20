@@ -1,15 +1,10 @@
 import * as puppeteer from 'puppeteer'
-import * as fs from 'fs';
+import axios from 'axios';
 import yargs from 'yargs';
+import https from 'https';
 import * as process from 'process';
 
 const args = yargs(process.argv.slice(2))
-    .option('output', {
-        alias: 'o',
-        description: 'Path to output file',
-        type: 'string',
-        demandOption: true
-    })
     .option('url', {
         alias: 'u',
         description: 'URL to navigate to',
@@ -18,92 +13,79 @@ const args = yargs(process.argv.slice(2))
     })
     .parse();
 
-    const cookies = new Set();
-    const cookieValues = new Set();
-    const storage = new Set();
-    
-    async function _store(type, change) {
-        return new Promise((resolve, reject) => {
-            if (type === 'cookie') {
-                // Check if the cookie value already exists
-                if (!cookieValues.has(change.value)) {
-                    cookies.add(change);
-                    cookieValues.add(change.value);
-                }
-                resolve();
-            } else if (type === 'storage') {
-                storage.add(change);
-                resolve();
-            } else {
-                reject();
-            }
-        });
-    }
+async function scanForCookies(url) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
 
-const inject = () => {
-    if (cookieStore) {
-        cookieStore.addEventListener(
-            'change',
-            async (event) => {
-                if (event.changed) {
-                    for (let idx in event.changed) {
-                        let change = event.changed[idx];
-                        change.host = window.location.host;
-                        await window._store('cookie', change)
-                    }
-                }
-                else if (event.deleted) {
-                    for (let idx in event.deleted) {
-                        let change = event.changed[idx];
-                        await window._store('cookie', change)
-                    }
-                }
-            }
-        )
-    }
-    if (window.localStorage) {
-        window.addEventListener('storage', async (event) => {
-            await window._store('storage', event)
-        })
+    // Navigate to the specified URL
+    await page.goto(url);
+
+    // Extract cookies from the page
+    const cookies = await page.cookies();
+    const modifiedCookies = [...cookies].map(cookie => {
+        const timestamp = cookie.expires;
+        const iso8601Date = new Date(timestamp * 1000).toISOString();
+        return {
+            name: cookie.name,
+            value: cookie.value,
+            expirationDate: iso8601Date,
+            domainURL: args.url,
+            category: "test",
+        };
+    });
+
+    // Close the browser
+    await browser.close();
+
+    return modifiedCookies;
+}
+
+async function sendCookiesToServer(cookies) {
+    const apiUrl = 'https://localhost:7163/api/Cookies';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsYXJzQGxhcnMuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiJjYWZlNGE4OS0wMjE4LTRiNjItODA5MC00NjA2MmI2ZmFmM2EiLCJleHAiOjIwMTg1OTYwNTR9.vMlBM98uD0gi8VKRRTgOK7ePQ4A5eQaRerGJjAYTp9I';
+
+    const config = {
+        httpsAgent: new https.Agent({
+            rejectUnauthorized: false  // Disable SSL verification
+        }),
+        timeout: 5000,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+    };
+
+    try {
+        // Perform Axios POST request with the collected cookies
+        const response = await axios.post(apiUrl, cookies, config);
+        console.log('Cookies sent to server:', response.data);
+    } catch (error) {
+        console.error('Error sending cookies to server:', error);
     }
 }
 
 (async (args) => {
-    const browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null
-    });
-    browser.on('disconnected', () => {
-        console.log('Browser disconnected');
-        fs.writeFileSync(args.output, JSON.stringify({
-            cookies: [...cookies],
-            storage: [...storage]
-        }, null, 2));
-    });
+    const targetUrl = args.url;
 
-    const page = await browser.newPage();
+    try {
+        // Step 1: Scan for cookies using Puppeteer
+        const collectedCookies = await scanForCookies(targetUrl);
 
-    page.on('response', async () => {
-        const cookies = await page.cookies();
-        for (let idx in cookies) {
-            let cookie = cookies[idx];
-            if (cookie.domain.startsWith('.')) {
-                cookie.domain = cookie.domain.slice(1);
-            }
-            await _store('cookie', cookie);
+        // Step 2: Send the collected cookies to the server using Axios
+        await sendCookiesToServer(collectedCookies);
+    } catch (error) {
+        console.error('Error sending cookies to server:', error.message);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Server responded with:', error.response.data);
+            console.error('Status code:', error.response.status);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('No response received from server');
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error setting up the request:', error.message);
         }
-    });
-
-    await page.exposeFunction('_store', _store);
-    await page.evaluateOnNewDocument(inject);
-    await page.goto(args.url);
-
-    if (process.env.CI === 'true') {
-        await page.waitForNetworkIdle({
-            idleTime: 1000,
-            timeout: 10000
-        });
-        await browser.close();
-        process.exit(fs.existsSync(args.output) ? 0 : 1);
     }
 })(args);

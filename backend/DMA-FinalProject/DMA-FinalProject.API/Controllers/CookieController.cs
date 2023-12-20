@@ -33,9 +33,9 @@ namespace DMA_FinalProject.API.Controllers
 
         // POST api/<CookieController>
         [HttpPost]
-        public ActionResult<bool> Add([FromBody] CookieDTO cookieDTO)
+        public ActionResult<bool> Add([FromBody] IEnumerable<CookieDTO> cookieDTOs)
         {
-            return Ok(cookieDAO.Add(cookieDTO.CookieFromDto()));
+            return Ok(cookieDAO.Add(cookieDTOs.CookieFromDtos()));
         }
     }
 }
