@@ -16,29 +16,27 @@ const args = yargs(process.argv.slice(2))
         type: 'string',
         demandOption: true
     })
-    .parse();
+    .parse()
 
-    const allCookies = new Set();
-    const cookieValues = new Set();
-    const storage = new Set();
-    
-    async function _store(type, change) {
-        return new Promise((resolve, reject) => {
-            if (type === 'cookie') {
-                // Check if the cookie value already exists
-                if (!cookieValues.has(change.value)) {
-                    allCookies.add(change);
-                    cookieValues.add(change.value);
-                }
-                resolve();
-            } else if (type === 'storage') {
-                storage.add(change);
-                resolve();
-            } else {
-                reject();
-            }
-        });
-    }
+
+const cookies = new Set();
+const storage = new Set();
+
+async function _store(type, change) {
+    return new Promise((resolve, reject) => {
+        if (type === 'cookie') {
+            cookies.add(change);
+            resolve();
+        }
+        else if (type === 'storage') {
+            storage.add(change);
+            resolve();
+        }
+        else {
+            reject();
+        }
+    });
+}
 
 const inject = () => {
     if (cookieStore) {
@@ -49,23 +47,24 @@ const inject = () => {
                     for (let idx in event.changed) {
                         let change = event.changed[idx];
                         change.host = window.location.host;
-                        await window._store('cookie', change);
+                        await window._store('cookie', change)
                     }
-                } else if (event.deleted) {
+                }
+                else if (event.deleted) {
                     for (let idx in event.deleted) {
-                        let change = event.deleted[idx];
-                        await window._store('cookie', change);
+                        let change = event.changed[idx];
+                        await window._store('cookie', change)
                     }
                 }
             }
-        );
+        )
     }
     if (window.localStorage) {
         window.addEventListener('storage', async (event) => {
-            await window._store('storage', event);
-        });
+            await window._store('storage', event)
+        })
     }
-};
+}
 
 (async (args) => {
     const browser = await puppeteer.launch({
@@ -75,7 +74,7 @@ const inject = () => {
     browser.on('disconnected', () => {
         console.log('Browser disconnected');
         fs.writeFileSync(args.output, JSON.stringify({
-            cookies: [...allCookies],
+            cookies: [...cookies],
             storage: [...storage]
         }, null, 2));
     });
