@@ -24,7 +24,8 @@ namespace DMA_FinalProject.DAL.DAO
                         {
                             using (SqlCommand insertCommand = new SqlCommand(
                                 "MERGE INTO fp_Cookie AS target USING (VALUES (@name, @value, @expirationdate, @domainurl, @category)) " +
-                                "AS source (name, value, expirationdate, domainurl, category) ON target.value = source.value " +
+                                "AS source (name, value, expirationdate, domainurl, category) " +
+                                "ON target.name = source.name AND target.domainurl = source.domainurl " +
                                 "WHEN NOT MATCHED THEN INSERT (name, value, expirationdate, domainurl, category) " +
                                 "VALUES (source.name, source.value, source.expirationdate, source.domainurl, source.category);", conn, trans))
                             {
