@@ -7,14 +7,17 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, 'src/lib/index.jsx'),
       name: 'Cookie Popup UI',
+      formats: ['umd'], // Specify UMD format
       fileName: (format) => `cookie-popup-ui.${format}.js`
     },
     rollupOptions: {
       external: ['react', 'react-dom'],
       output: {
         globals: {
-          react: 'React'
-        }
+          react: 'React',
+          'react-dom': 'ReactDOM' // Include react-dom in globals
+        },
+        sourcemap: true // Enable source maps
       }
     }
   },
