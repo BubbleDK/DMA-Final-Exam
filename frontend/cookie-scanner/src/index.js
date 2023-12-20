@@ -1,15 +1,10 @@
 import * as puppeteer from 'puppeteer'
-import * as fs from 'fs';
+import axios from 'axios';
 import yargs from 'yargs';
+import https from 'https';
 import * as process from 'process';
 
 const args = yargs(process.argv.slice(2))
-    .option('output', {
-        alias: 'o',
-        description: 'Path to output file',
-        type: 'string',
-        demandOption: true
-    })
     .option('url', {
         alias: 'u',
         description: 'URL to navigate to',
@@ -18,27 +13,34 @@ const args = yargs(process.argv.slice(2))
     })
     .parse();
 
-    const cookies = new Set();
-    const cookieValues = new Set();
-    const storage = new Set();
-    
-    async function _store(type, change) {
-        return new Promise((resolve, reject) => {
-            if (type === 'cookie') {
-                // Check if the cookie value already exists
-                if (!cookieValues.has(change.value)) {
-                    cookies.add(change);
-                    cookieValues.add(change.value);
-                }
-                resolve();
-            } else if (type === 'storage') {
-                storage.add(change);
-                resolve();
-            } else {
-                reject();
+const config = {
+    headers: {
+        "Content-Type": "application/json",
+        Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsYXJzQGxhcnMuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiJjYWZlNGE4OS0wMjE4LTRiNjItODA5MC00NjA2MmI2ZmFmM2EiLCJleHAiOjIwMTg1OTYwNTR9.vMlBM98uD0gi8VKRRTgOK7ePQ4A5eQaRerGJjAYTp9I",
+    },
+};
+const cookies = new Set();
+const cookieValues = new Set();
+const storage = new Set();
+
+async function _store(type, change) {
+    return new Promise((resolve, reject) => {
+        if (type === 'cookie') {
+            // Check if the cookie value already exists
+            if (!cookieValues.has(change.value)) {
+                cookies.add(change);
+                cookieValues.add(change.value);
             }
-        });
-    }
+            resolve();
+        } else if (type === 'storage') {
+            storage.add(change);
+            resolve();
+        } else {
+            reject();
+        }
+    });
+}
 
 const inject = () => {
     if (cookieStore) {
@@ -75,10 +77,6 @@ const inject = () => {
     });
     browser.on('disconnected', () => {
         console.log('Browser disconnected');
-        fs.writeFileSync(args.output, JSON.stringify({
-            cookies: [...cookies],
-            storage: [...storage]
-        }, null, 2));
     });
 
     const page = await browser.newPage();
@@ -97,6 +95,24 @@ const inject = () => {
     await page.exposeFunction('_store', _store);
     await page.evaluateOnNewDocument(inject);
     await page.goto(args.url);
+
+    const modifiedCookies = [...cookies].map(cookie => {
+        return {
+            name: cookie.name,
+            value: cookie.value,
+            expirationDate: cookie.expires,
+            domainURL: args.url,
+            category: "",
+        };
+    });
+    // console.log(modifiedCookies);
+    axios.post('https://localhost:7163/api/Cookies', modifiedCookies, config)
+        .then((response) => {
+            console.log("Cookies created:", response.data);
+        })
+        .catch((error) => {
+            console.error("Error sending cookies:", error);
+        });
 
     if (process.env.CI === 'true') {
         await page.waitForNetworkIdle({

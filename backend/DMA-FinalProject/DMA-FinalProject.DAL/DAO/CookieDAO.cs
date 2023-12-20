@@ -10,7 +10,7 @@ namespace DMA_FinalProject.DAL.DAO
 {
     public class CookieDAO
     {
-        public bool Add(Cookie cookie)
+        public bool Add(IEnumerable<Cookie> cookies)
         {
             SqlTransaction trans;
             using (SqlConnection conn = new SqlConnection(DBConnection.ConnectionString))
@@ -20,8 +20,13 @@ namespace DMA_FinalProject.DAL.DAO
                 {
                     try
                     {
+                        foreach (var cookie in cookies)
+                        {
                             using (SqlCommand insertCommand = new SqlCommand(
-                                "INSERT INTO fp_Cookie VALUES (@name, @value, @expirationdate, @domainurl, @category);", conn, trans))
+                                "MERGE INTO fp_Cookie AS target USING (VALUES (@name, @value, @expirationdate, @domainurl, @category)) " +
+                                "AS source (name, value, expirationdate, domainurl, category) ON target.value = source.value " +
+                                "WHEN NOT MATCHED THEN INSERT (name, value, expirationdate, domainurl, category) " +
+                                "VALUES (source.name, source.value, source.expirationdate, source.domainurl, source.category);", conn, trans))
                             {
                                 insertCommand.Parameters.AddWithValue("@name", cookie.Name);
                                 insertCommand.Parameters.AddWithValue("@value", cookie.Value);
@@ -30,6 +35,7 @@ namespace DMA_FinalProject.DAL.DAO
                                 insertCommand.Parameters.AddWithValue("@category", cookie.Category);
                                 insertCommand.ExecuteNonQuery();
                             }
+                        }
                             trans.Commit();
                     }
                     catch (Exception)
