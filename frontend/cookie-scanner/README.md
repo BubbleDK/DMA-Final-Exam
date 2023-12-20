@@ -6,7 +6,7 @@ This is a simple tool using puppeteer to scan cookies from a website; the output
 
 ```bash
 $ npm install
-$ npm start -- --url=https://example.com --output=report.json
+$ npm start -- --url=https://example.com
 # Browse in the browser that opens
 # Close the browser
 # Check the report.json file
