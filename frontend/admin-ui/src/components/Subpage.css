@@ -1,10 +1,13 @@
 .Subpage-wrapper {
+    height: 100%;
+
     margin-top: 50px;
     margin-bottom: 50px;
     margin-right: 100px;
     margin-left: 100px;
     display: flex;
     flex-direction: column;
+    gap: 50px;
 }
 
 .top-content {

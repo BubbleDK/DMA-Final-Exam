@@ -52,8 +52,6 @@ const Websites = () => {
     <Table.Tr key={website.name}>
       <Table.Td>{website.name}</Table.Td>
       <Table.Td>{website.url}</Table.Td>
-      <Table.Td>12/01/2024</Table.Td>
-      <Table.Td>{website.cookieAmount}</Table.Td>
       <Table.Td>
         <Group>
           <ActionIcon variant="light" color="gray" aria-label="Settings" onClick={() => handleIconClick(website.name, website.url)}>
@@ -76,8 +74,6 @@ const Websites = () => {
               <Table.Tr>
                 <Table.Th>Domæne navn</Table.Th>
                 <Table.Th>Domæne URL</Table.Th>
-                <Table.Th>Sidste scan</Table.Th>
-                <Table.Th>Cookies</Table.Th>
                 <Table.Th></Table.Th>
               </Table.Tr>
             </Table.Thead>
