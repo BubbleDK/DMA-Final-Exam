@@ -15,11 +15,18 @@ type Employee = {
   companyId: number;
 }
 
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsYXJzQGxhcnMuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiJjYWZlNGE4OS0wMjE4LTRiNjItODA5MC00NjA2MmI2ZmFmM2EiLCJleHAiOjIwMTg1OTYwNTR9.vMlBM98uD0gi8VKRRTgOK7ePQ4A5eQaRerGJjAYTp9I",
+  },
+};
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const CheckToken = async (token: string) => {
   try {
-    const response = await axios.post('https://localhost:7163/api/Login/checkToken?token=' + token);
+    const response = await axios.post('https://localhost:7163/api/Login/checkToken?token=' + token, config);
 
     return response.data;
   } catch (error) {
@@ -43,9 +50,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             try {
               // Encode the email to ensure special characters are properly handled in the URL
               const encodedEmail = encodeURIComponent(employeeEmail);
-              const url = `https://localhost:7163/employees/${encodedEmail}`;
-      
-              const response = await axios.get(url);
+              const url = `https://localhost:7163/api/Employees/${encodedEmail}`;
+
+              const response = await axios.get(url, config);
               // Handle the response data here
               setEmployeeData({
                 name: response.data.name,
@@ -91,7 +98,7 @@ const Login = async (email: string, password: string) => {
     const response = await axios.post('https://localhost:7163/api/Login/login', {
       Email: email,
       Password: password
-    });
+    }, config);
 
     localStorage.setItem('token', response.data.token);
     localStorage.setItem('employeeEmail', response.data.email)
