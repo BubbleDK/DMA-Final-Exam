@@ -25,11 +25,13 @@ async function scanForCookies(url) {
     const modifiedCookies = [...cookies].map(cookie => {
         const timestamp = cookie.expires;
         const iso8601Date = new Date(timestamp * 1000).toISOString();
+        const url = args.url;
+        const modifiedUrl = url.replace(/^https:\/\//, '');
         return {
             name: cookie.name,
             value: cookie.value,
             expirationDate: iso8601Date,
-            domainURL: args.url,
+            domainURL: modifiedUrl,
             category: "test",
         };
     });
