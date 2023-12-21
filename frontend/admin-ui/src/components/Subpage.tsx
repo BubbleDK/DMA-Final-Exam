@@ -1,6 +1,6 @@
 import { useParams, useLocation } from 'react-router-dom';
 import './Subpage.css'
-import { Button, ScrollArea, Table, Text } from '@mantine/core';
+import { Button, ScrollArea, Table } from '@mantine/core';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
