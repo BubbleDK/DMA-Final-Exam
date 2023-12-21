@@ -22,7 +22,7 @@ const Subpage = () => {
         if (domainURL === null) return console.log('Couldnt find domainURL');
 
         // Make axios request below
-        axios.post("http://localhost:5000/api/cookies/" + domainURL)
+        const cookies = axios.post("http://localhost:5000/api/cookies/" + domainURL);
     }
 
     return (

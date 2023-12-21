@@ -26,7 +26,7 @@ app.use(cors());
  * cookies API module.
  * @module api/cookies
  */
-import router from './routes/cookies';
+import router from './routes/cookies.js';
 
 /**
  * Mounting the cookies router on the application.

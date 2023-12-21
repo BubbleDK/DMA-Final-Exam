@@ -1,24 +1,13 @@
 import * as puppeteer from 'puppeteer'
 import axios from 'axios';
-import yargs from 'yargs';
 import https from 'https';
-import * as process from 'process';
-
-const args = yargs(process.argv.slice(2))
-    .option('url', {
-        alias: 'u',
-        description: 'URL to navigate to',
-        type: 'string',
-        demandOption: true
-    })
-    .parse();
 
 async function scanForCookies(url) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     // Navigate to the specified URL
-    await page.goto("https://" + url);
+    await page.goto("https://" + url.url);
 
     // Extract cookies from the page
     const cookies = await page.cookies();
@@ -29,7 +18,7 @@ async function scanForCookies(url) {
             name: cookie.name,
             value: cookie.value,
             expirationDate: iso8601Date,
-            domainURL: url,
+            domainURL: url.url,
             category: "test",
         };
     });
@@ -64,8 +53,8 @@ async function sendCookiesToServer(cookies) {
     }
 }
 
-const cookieScanner = (async (args) => {
-    const targetUrl = args.url;
+const cookieScanner = (async (url) => {
+    const targetUrl = url;
 
     try {
         // Step 1: Scan for cookies using Puppeteer
@@ -73,6 +62,8 @@ const cookieScanner = (async (args) => {
 
         // Step 2: Send the collected cookies to the server using Axios
         await sendCookiesToServer(collectedCookies);
+
+        return collectedCookies;
     } catch (error) {
         console.error('Error sending cookies to server:', error.message);
         if (error.response) {
@@ -88,6 +79,6 @@ const cookieScanner = (async (args) => {
             console.error('Error setting up the request:', error.message);
         }
     }
-})(args);
+});
 
-module.exports = cookieScanner;
+export default cookieScanner;

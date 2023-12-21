@@ -4,7 +4,7 @@
  */
 
 import express from 'express';
-import cookieScanner from '../cookieScanner';
+import cookieScanner from '../cookieScanner.js';
 
 /**
  * Express router to mount cookies related functions on.
@@ -26,10 +26,10 @@ router.post('/:url', async (req, res) => {
     const targetUrl = req.params.url;
     try {
         // Invoke the cookieScanner function with the provided URL
-        await cookieScanner({ url: targetUrl });
+        const collectedCookies = await cookieScanner({ url: targetUrl });
 
         // Respond to the client
-        res.status(200).send('Cookies scanned successfully.');
+        res.status(200).send(collectedCookies);
     } catch (error) {
         console.error('Error in cookieScanner:', error.message);
         // Handle errors and respond accordingly
@@ -37,4 +37,4 @@ router.post('/:url', async (req, res) => {
     }
 })
 
-module.exports = router;
+export default router;
