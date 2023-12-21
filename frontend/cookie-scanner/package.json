@@ -29,6 +29,9 @@
   "homepage": "https://github.com/PacktDev/cookie-scanner#readme",
   "dependencies": {
     "axios": "^1.6.2",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
     "puppeteer": "^19.7.2",
     "yargs": "^17.7.1"
   },

@@ -1,13 +1,13 @@
 /**
- * Devices API module.
- * @module api/devices
+ * Cookies API module.
+ * @module api/cookies
  */
 
-import express from 'express'
-import cookieScanner from './cookieScanner';
+import express from 'express';
+import cookieScanner from '../cookieScanner';
 
 /**
- * Express router to mount devices related functions on.
+ * Express router to mount cookies related functions on.
  * @type {object}
  * @const
  */

@@ -26,13 +26,13 @@ app.use(cors());
  * cookies API module.
  * @module api/cookies
  */
-const cookies = require('./routes/api/cookies');
+import router from './routes/cookies';
 
 /**
  * Mounting the cookies router on the application.
  * All routes defined in the cookies router will be prefixed with '/api/cookies'.
  */
-app.use('/api/cookies', cookies)
+app.use('/api/cookies', router)
 
 /**
  * Server listening port. Default is 5000.
@@ -44,5 +44,5 @@ const port = process.env.PORT || 5000;
  * Start the application server.
  */
 app.listen(port, () => {
-  console.log(`Server started on port: ${port}`)
+    console.log(`Server started on port: ${port}`)
 })

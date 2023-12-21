@@ -1,6 +1,7 @@
 import { useParams, useLocation } from 'react-router-dom';
 import './Subpage.css'
 import { Button } from '@mantine/core';
+import axios from 'axios';
 
 type RouteParams = {
     websiteName: string;
@@ -21,7 +22,7 @@ const Subpage = () => {
         if (domainURL === null) return console.log('Couldnt find domainURL');
 
         // Make axios request below
-        
+        axios.post("http://localhost:5000/api/cookies/" + domainURL)
     }
 
     return (
