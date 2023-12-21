@@ -4,6 +4,7 @@ import './index.css'
 import axios from 'axios';
 import { ActionIcon, Group, ScrollArea, Table } from '@mantine/core';
 import { IconSettings } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
 type Website = {
   url: string;
@@ -15,6 +16,7 @@ type Website = {
 const Websites = () => {
   const { isLoggedIn, employeeData } = useAuth();
   const [websites, setWebsites] = useState<Website[]>([]);
+  const navigate = useNavigate();
 
   const config = {
     headers: {
@@ -22,6 +24,10 @@ const Websites = () => {
       Authorization:
         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJsYXJzQGxhcnMuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9zZXJpYWxudW1iZXIiOiJjYWZlNGE4OS0wMjE4LTRiNjItODA5MC00NjA2MmI2ZmFmM2EiLCJleHAiOjIwMTg1OTYwNTR9.vMlBM98uD0gi8VKRRTgOK7ePQ4A5eQaRerGJjAYTp9I",
     },
+  };
+
+  const handleIconClick = (websiteName: string, domainURL: string) => {
+    navigate(`/subpage/${websiteName}?url=${encodeURIComponent(domainURL)}`);
   };
 
   useEffect(() => {
@@ -50,7 +56,7 @@ const Websites = () => {
       <Table.Td>{website.cookieAmount}</Table.Td>
       <Table.Td>
         <Group>
-          <ActionIcon variant="light" color="gray" aria-label="Settings">
+          <ActionIcon variant="light" color="gray" aria-label="Settings" onClick={() => handleIconClick(website.name, website.url)}>
             <IconSettings size="1rem" stroke={1.5} />
           </ActionIcon>
         </Group>
