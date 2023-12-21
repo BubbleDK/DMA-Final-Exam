@@ -6,10 +6,10 @@ This is a simple tool using puppeteer to scan cookies from a website; the output
 
 ```bash
 $ npm install
-$ npm start -- --url=https://example.com
+# To hit cookiescanner on express server:
+# http://localhost:5000/api/cookies/https://example.com
 # Browse in the browser that opens
 # Close the browser
-# Check the report.json file
 ```
 
 Copyright [Packt Publishing](https://www.packtpub.com/) 2023
