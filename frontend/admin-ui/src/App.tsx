@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Websites from './pages/Websites';
 import Statistics from './pages/Statistics';
+import Subpage from './components/Subpage';
 
 function App() { 
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path="/websites" element={<Websites />} />
         <Route path="/statistics" element={<Statistics />} />
+        <Route path="/subpage/:websiteName" element={<Subpage />} />
       </Routes>
     </div>
   )
