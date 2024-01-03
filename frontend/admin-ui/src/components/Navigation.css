@@ -1,0 +1,9 @@
+.navigation-wrapper {
+  background-color: #141517;
+  z-index: 1; 
+  margin-right: 0; 
+  margin-left: 0;
+  width: 100%; 
+  padding-left: 100px;
+  padding-right: 100px;
+}

@@ -25,7 +25,7 @@ function Navigation() {
 
 
     return (
-        <div style={{ backgroundColor: "#141517", zIndex: 1, marginRight: 0, marginLeft: 0, width: '100%', paddingLeft: 100, paddingRight: 100 }}>
+        <div className='navigation-wrapper'>
             <Flex align='center' justify='space-between'>
                 <Tabs value={location.pathname} color='indigo'>
                     <Tabs.List style={{ border: "none", height: 60 }}>
