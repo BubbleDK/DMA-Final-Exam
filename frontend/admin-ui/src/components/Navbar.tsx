@@ -39,13 +39,14 @@ function Navbar() {
 
   return (
     <>
-      <Modal opened={!isLoggedIn} onClose={() => {  }} title="Login" centered>
+      <Modal opened={!isLoggedIn} onClose={() => {  }} title="Login" centered >
         <form onSubmit={form.onSubmit(handleSubmit)} className='auth-modal'>
           <TextInput
             required
             placeholder="Your email"
             label="Email"
             leftSection={<IconAt size={16} stroke={1.5} />}
+            data-testid="email-login-input"
             {...form.getInputProps('email')}
           />
 
@@ -54,10 +55,11 @@ function Navbar() {
             placeholder="Password"
             label="Password"
             leftSection={<IconLock size={16} stroke={1.5} />}
+            data-testid="password-login-input"
             {...form.getInputProps('password')}
           />
 
-          <Button color="blue" type="submit" mt={'md'}>
+          <Button color="blue" type="submit" mt={'md'} data-testid="login-button">
             Login
           </Button>
         </form>
