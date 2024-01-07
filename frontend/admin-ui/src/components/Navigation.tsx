@@ -18,7 +18,7 @@ function Navigation() {
     if (!isLoggedIn) return;
 
     const link = links.map((value, index) => (
-        <Tabs.Tab value={value.link} key={index} onClick={() => navigate(value.link)}>
+        <Tabs.Tab value={value.link} key={index} onClick={() => navigate(value.link)} data-testid={"test-" + value.label}>
           {value.label}
         </Tabs.Tab>
     ));
