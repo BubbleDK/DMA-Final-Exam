@@ -71,7 +71,7 @@ function Navbar() {
         </div>
 
         <div className='login-section'>
-          {isLoggedIn && <Button onClick={() => { logout(); }}>Log out</Button>}
+          {isLoggedIn && <Button onClick={() => { logout(); }} data-testid="logout-button">Log out</Button>}
         </div>
       </div>
     </>

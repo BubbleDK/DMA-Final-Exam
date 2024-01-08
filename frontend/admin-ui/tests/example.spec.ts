@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('Login process in Navbar component', async ({ page }) => {
-  // Navigate to your application
+  // Navigate to the application
   await page.goto('http://localhost:5173');
 
   // Check if the login button is initially visible
@@ -15,12 +15,12 @@ test('Login process in Navbar component', async ({ page }) => {
   // Click the login button to submit the form
   await loginButton.click();
 
-  // Check if the login button is still visible after login attempt
-  await expect(loginButton).not.toBeVisible();
+  // Check if the logout button is visible after login attempt
+  await expect(await page.getByTestId('logout-button')).toBeVisible();
 });
 
 test('Check navigation functionality', async ({ page }) => {
-  // Navigate to your application
+  // Navigate to the application
   await page.goto('http://localhost:5173');
 
   // Check if the login button is initially visible
@@ -34,13 +34,14 @@ test('Check navigation functionality', async ({ page }) => {
   // Click the login button to submit the form
   await loginButton.click();
 
-  // Check if the login button is still visible after login attempt
-  await expect(loginButton).not.toBeVisible();
+  // Check if the logout button is visible after login attempt
+  await expect(await page.getByTestId('logout-button')).toBeVisible();
 
-  // Check if the home button is visible
+  // Check if the websites button is visible
   const websitesButton = await page.getByTestId('test-Websites');
+  await expect(websitesButton).toBeVisible();
   await websitesButton.click();
 
-  // Check if the URL has changed to /websites
+  // Check if the URL has changed to /#/websites
   await expect(page.url()).toBe('http://localhost:5173/#/websites');
 });
