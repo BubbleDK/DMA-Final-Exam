@@ -72,7 +72,7 @@ namespace DMA_FinalProject.API.Controllers
             var jwtToken = handler.ReadToken(token) as JwtSecurityToken;
             if (jwtToken == null)
             {
-                return Unauthorized("Token not valid");
+                return Unauthorized(false);
             }
             var validationParameters = new TokenValidationParameters
             {
@@ -99,7 +99,7 @@ namespace DMA_FinalProject.API.Controllers
             }
             catch (Exception)
             {
-                return Unauthorized("Token not valid");
+                return Unauthorized(false);
             }
 
         }
